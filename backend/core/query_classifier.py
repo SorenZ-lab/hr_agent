@@ -345,4 +345,4 @@ def get_query_classifier() -> QueryClassifier:
     return _classifier
 if __name__ == '__main__':
     qc = get_query_classifier()
-    print(qc.classify(text="商品聚合这个项目讲什么的"))
+    print(qc.classify(text="公司岗位的任职要求是什么"))

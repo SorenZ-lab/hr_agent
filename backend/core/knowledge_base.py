@@ -135,7 +135,7 @@ class DocumentChunk:
     content:          chunk 文本（Contextual RAG 模式下含 LLM 生成的上下文描述前缀）
     embedding:        Dense 向量（BGE-M3，1024 维）
     sparse_embedding: Sparse 向量（{token_id: weight}，BGE-M3 lexical weights）
-    source_name:      来源标注（检索结果展示用，如 "Java讲义 > 第3章 > 3.1 IOC"）
+    source_name:      来源标注（检索结果展示用，如 "技术文档 > 系统架构 > 1.2 缓存设计"）
     """
     id:               str
     content:          str
@@ -379,7 +379,7 @@ if __name__ == '__main__':
     # device = next(bge_model._model.model.parameters()).device
     # print(f'device: {device}')
     model = BGEMEmbedder.get_instance()
-    dense, sparse = model.encode_query(text="商品聚合多模态大模型项目主要讲的是什么内容")
+    dense, sparse = model.encode_query(text="公司员工的年假政策是什么？")
     # print(f'result: {len(result[0])}')
     # print("*"*80)
     # print(f'result: {result[1]}')

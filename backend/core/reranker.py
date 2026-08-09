@@ -25,7 +25,7 @@ class RankedDocument:
 
 class BGEReranker:
     """
-    BGE-Reranker-v2-m3 精排服务（单例）。
+    BGE-Reranker-large 精排服务（单例）。
 
     对 Hybrid 召回的候选文档做 CrossEncoder 精排，
     直接返回 [0, 1] 置信度，无需额外归一化。
@@ -33,7 +33,7 @@ class BGEReranker:
     用法：
         reranker = BGEReranker.get_instance()
         docs, confidence = reranker.rerank_with_confidence(
-            query="什么是 Spring IOC？",
+            query="公司年假的申请流程是什么？",
             documents=candidates,
             top_k=3,
         )
@@ -49,10 +49,10 @@ class BGEReranker:
         use_local = (
             os.path.exists(model_path)
             and os.path.isdir(model_path)
-            and any(f.endswith((".bin", ".safetensors", ".json")) for f in os.listdir(model_path))
+            and any(f.endswith((".bin", ".safetensors")) for f in os.listdir(model_path))
         )
         # print(f'use_local: {use_local}')
-        model_id = model_path if use_local else "BAAI/bge-reranker-v2-m3"
+        model_id = model_path if use_local else "BAAI/bge-reranker-large"
         device = "cuda" if torch.cuda.is_available() else "cpu"
 
         logger.info("reranker.loading", model_id=model_id, device=device)
@@ -177,7 +177,7 @@ def retrieve(
     return reranker.rerank_with_confidence(query, candidates, top_k=rerank_top_k)
 
 if __name__ == '__main__':
-    query = "商品聚合多模态大模型项目主要讲的是什么内容"
+    query = "公司员工的年假政策是什么？"
     results = retrieve(query, tenant_id="tenant_default")
     print(f"results[0]: {results[0]}")
     print("*"*80)

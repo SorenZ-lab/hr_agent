@@ -102,7 +102,7 @@ cd HRAgent
 
 conda create -n hr_agent python=3.11 -y
 conda activate hr_agent
-pip install -r requirments.txt
+pip install -r requirements.txt
 ```
 
 ### 2. 配置环境变量
@@ -123,13 +123,12 @@ JWT_SECRET_KEY=any-random-secret-string
 ### 3. 启动基础设施
 
 ```bash
-docker-compose --env-file .env.local up -d postgres redis minio etcd milvus langfuse
+docker-compose --env-file .env.local up -d postgres etcd minio milvus
 ```
 
 ### 4. 初始化数据（首次运行）
 
 ```bash
-python scripts/init_minio.py        # 创建 MinIO Bucket
 python scripts/init_milvus.py       # 创建 Milvus Collection
 python scripts/seed_data.py         # 写入测试用户
 ```
@@ -137,7 +136,7 @@ python scripts/seed_data.py         # 写入测试用户
 ### 5. 验证环境
 
 ```bash
-python scripts/verify_env.py
+python check_env.py
 ```
 
 ### 6. 启动后端
@@ -164,11 +163,9 @@ npm run dev
 | FastAPI 后端 | **8000** | REST + SSE 接口，`/docs` 查看 Swagger |
 | Vue3 前端 | **3000** | 候选人 / HR / 管理员界面 |
 | PostgreSQL | **5433** | 宿主机 5432 已占用，隔离到 5433 |
-| Redis | **6380** | 宿主机 6379 已占用 |
 | MinIO API | **9002** | 宿主机 9000 已占用 |
 | MinIO 控制台 | **9003** | 对象存储管理 |
 | Milvus | **19531** | 宿主机 19530 已占用 |
-| Langfuse | **3001** | LLM 调用追踪与可观测性 |
 
 > 所有连接配置统一从 `.env.local` 读取，**禁止硬编码端口号**。
 
@@ -180,7 +177,6 @@ npm run dev
 |------|------|
 | http://localhost:3000 | 前端应用 |
 | http://localhost:8000/docs | FastAPI 接口文档（Swagger） |
-| http://localhost:3001 | Langfuse 可观测性平台 |
 | http://localhost:9003 | MinIO 控制台 |
 
 | 角色 | 用户名 | 密码 |
@@ -218,12 +214,12 @@ HRAgent/
 │   ├── api/                     # HTTP 客户端封装
 │   └── stores/                  # Pinia 状态管理
 ├── scripts/
+│   ├── init_db.sql             # PostgreSQL 建表脚本
 │   ├── init_milvus.py           # 初始化向量集合
 │   ├── seed_data.py             # 填充测试数据
-│   ├── build_knowledge_base.py  # 导入知识库文档
-│   └── verify_env.py            # 环境自检
+│   └── build_knowledge_base.py  # 导入知识库文档
 ├── tests/                       # 单元测试 + 集成测试
-├── requirments.txt
+├── requirements.txt
 ├── docker-compose.yml
 └── .env.example
 ```

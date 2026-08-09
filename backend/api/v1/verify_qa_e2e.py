@@ -114,7 +114,7 @@ if __name__ == "__main__":
     #
     # # ---------- 2. 测试 PRECISE 路径（具体问题，期望 RAG） ----------
     # print("\n>>> 测试 PRECISE 路径（RAG）")
-    # r = chat(token, "介绍下商品聚合的项目？")
+    # r = chat(token, "介绍一下公司的招聘流程？")
     # print_result("PRECISE", r)
     # if r["answer_mode"] == "rag" and len(r["sources"]) > 0:
     #     print("✅ PRECISE RAG 正常")
@@ -132,7 +132,7 @@ if __name__ == "__main__":
 
     # ---------- 4. 测试流式接口 ----------
     print("\n>>> 测试流式接口")
-    stream_chat(token, "介绍下商品聚合的项目")
+    stream_chat(token, "介绍一下公司的招聘流程")
 
     # ---------- 5. 测试历史记录接口 ----------
     # print("\n>>> 测试历史记录接口")

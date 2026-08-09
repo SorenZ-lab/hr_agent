@@ -49,7 +49,7 @@ class Settings(BaseSettings):
     jwt_algorithm: str = "HS256"                  # 签名算法
     jwt_access_token_expire_minutes: int = 10080  # 令牌有效期（分钟）
 
-    # ── MCP Server 地址（第五章用）──
+    # ── MCP Server 地址 ──
     kb_mcp_server_url:  str = "http://localhost:8000/mcp/kb"
     web_search_mcp_url: str = "http://localhost:8000/mcp/web-search"
 
