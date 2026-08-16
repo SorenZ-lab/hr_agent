@@ -252,23 +252,7 @@ python scripts/build_knowledge_base.py --file <文档路径> --position_id <岗�
 
 ---
 
-## 常见问题
 
-**Q: 后端启动报 `extra inputs are not permitted`**
-
-`.env.local` 中保留旧字段没有问题，`config.py` 已设置 `extra = "ignore"` 自动忽略。
-
-**Q: Milvus 连接超时**
-
-确认 etcd 和 milvus-standalone 容器均已 healthy：
-
-```bash
-docker-compose ps | grep -E "milvus|etcd"
-```
-
-**Q: 前端 SSE 无流式效果**
-
-智能问答的 SSE 接口直连 `http://localhost:8000`，不经过 Vite proxy，属于正常设计。
 
 ---
 
