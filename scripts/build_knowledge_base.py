@@ -1,4 +1,4 @@
-# scripts/build_knowledge_base.py（阶段版：文档加载 + 分块，5.4 / 5.5 继续补全）
+# scripts/build_knowledge_base.py（文档加载 + 分块）
 
 from pathlib import Path
 from langchain_community.document_loaders import PyPDFLoader, TextLoader
@@ -27,7 +27,7 @@ _CHAR_SPLITTER = RecursiveCharacterTextSplitter(
 )
 
 
-# ── 文档加载（5.2 内容，此处合并为完整文件）────────────────────
+# ── 文档加载 ────────────────────
 
 def load_document(file_path: str) -> list[Document]:
     """统一文档加载入口，根据扩展名选择 Loader"""
@@ -125,7 +125,7 @@ def split_documents(docs: list[Document], file_path: str) -> list[Document]:
 
 
 
-# scripts/build_knowledge_base.py（阶段版追加，5.5 补 Milvus 写入后形成完整版）
+# scripts/build_knowledge_base.py（追加 Milvus 写入）
 
 import uuid
 import sys
@@ -379,7 +379,7 @@ async def build_pipeline(
     print(f"   ⚠️  更新此文档时请保留此 document_id")
 if __name__ == '__main__':
     import asyncio
-    FILE_PATH = "/Users/ligang/Desktop/LiveHRAgent/samples/sample2.md"
+    FILE_PATH = "samples/sample2.md"  # 改为实际文档路径
     POSITION_ID = "3e76aeed-5e01-4aa7-be8d-2055d12b9ea7"  # 替换为实际岗位 UUID
     DOCUMENT_ID = None  # None = 自动生成；更新同一文档时填入上次输出的 ID
     TENANT_ID = "tenant_default"

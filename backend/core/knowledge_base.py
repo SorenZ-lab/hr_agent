@@ -30,7 +30,7 @@ class BGEMEmbedder:
 
     用法：
         embedder = BGEMEmbedder.get_instance()
-        dense, sparse = embedder.encode_query("什么是 Spring IOC？")
+        dense, sparse = embedder.encode_query("公司员工的年假政策是什么？")
     """
 
     _instance: Optional["BGEMEmbedder"] = None   # 单例持有
@@ -158,8 +158,8 @@ def generate_chunk_id(content: str, document_id: str, chunk_index: int) -> str:
     - 同一文档不同位置的 chunk 不冲突
     - 内容不变时 ID 稳定（幂等重建时不会重复插入）
 
-    注意：此函数后续会作为 KnowledgeBaseClient 的静态方法重新出现（5.6），
-    届时 build_knowledge_base.py 会改为调用 KnowledgeBaseClient.generate_chunk_id()。
+    注意：此函数会作为 KnowledgeBaseClient 的静态方法出现，
+    build_knowledge_base.py 会调用 KnowledgeBaseClient.generate_chunk_id()。
     """
     raw = f"{document_id}_{chunk_index}_{content[:50]}"
     # print(f'raw: {raw}')
@@ -186,7 +186,7 @@ class KnowledgeBaseClient:
     Milvus 知识库客户端（MilvusClient 版）。
 
     单 Collection 设计（knowledge_domain），按 tenant_id 字段过滤实现多租户隔离。
-    本节实现写入方法，5.6 节追加检索方法。
+    实现写入方法；检索方法见 _hybrid_search。
 
     单例连接：_client 是类变量，整个进程只创建一次 MilvusClient 连接。
     """
@@ -194,7 +194,7 @@ class KnowledgeBaseClient:
     _client: Optional["MilvusClient"] = None
     _loaded: bool = False
 
-    # HNSW 搜索时的候选集大小，精度/速度平衡点（5.6 节 _hybrid_search 使用）
+    # HNSW 搜索时的候选集大小，精度/速度平衡点（_hybrid_search 使用）
     ANN_EF = 64
 
     def __init__(self):
@@ -291,7 +291,7 @@ class KnowledgeBaseClient:
         Returns:
             候选文档列表，每项含 "content" / "score" / "metadata"。
             score 是 WeightedRanker 的加权排序信号，不是概率，
-            直接交给 5.7 节的 Reranker 做精细打分。
+            直接交给 Reranker 做精细打分。
         """
         try:
             # ── Dense ANN 检索请求 ─────────────────────────────────────
@@ -373,7 +373,7 @@ class KnowledgeBaseClient:
             expr += f' and position_id == "{safe_position}"'
         return expr
 if __name__ == '__main__':
-    # bge_model = BGEMEmbedder(model_path = "/Users/ligang/Desktop/LiveHRAgent/backend/models/embedding/bge-m3")
+    # bge_model = BGEMEmbedder(model_path = "<本地 BGE-M3 模型路径>")
     # print(bge_model._model)
     # # 验证设备
     # device = next(bge_model._model.model.parameters()).device
@@ -383,13 +383,12 @@ if __name__ == '__main__':
     # print(f'result: {len(result[0])}')
     # print("*"*80)
     # print(f'result: {result[1]}')
-    # print(generate_chunk_id(content="AI是人工智能", document_id="AI", chunk_index=0))
+    # print(generate_chunk_id(content="示例内容", document_id="demo", chunk_index=0))
     kb = KnowledgeBaseClient()
     results = kb._hybrid_search(dense, sparse, top_k=5)
     print(f'results[0]: {results[0]}')
 
     from scripts.build_knowledge_base import load_document,split_documents, embed_chunks
-    # file_path = "/Users/ligang/Desktop/LiveHRAgent/samples/sample2.md"
     # # 加载文档
     # docs = load_document(file_path)
     # # 切分文档

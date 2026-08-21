@@ -16,27 +16,27 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from backend.config import get_settings                          # 配置（第 3 章）
-from backend.core.logger import configure_logging, get_logger    # 日志（3.3）
-from backend.api.router import api_router                        # 8.6.1 聚合的总路由
+from backend.config import get_settings                          # 配置
+from backend.core.logger import configure_logging, get_logger    # 日志
+from backend.api.router import api_router                        # 聚合的总路由
 
 settings = get_settings()
 
-# MCP Sub-Apps（第 5.11 章实现）在 lifespan 定义前创建，
+# MCP Sub-Apps 在 lifespan 定义前创建，
 # 这样 lifespan 与下面的 mount 共享同一实例
-from backend.mcp.knowledge_base_server import mcp as kb_mcp      # 知识库 MCP（5.11）
-from backend.mcp.web_search_server import mcp as ws_mcp          # 联网搜索 MCP（5.11）
+from backend.mcp.knowledge_base_server import mcp as kb_mcp      # 知识库 MCP
+from backend.mcp.web_search_server import mcp as ws_mcp          # 联网搜索 MCP
 
 _kb_app = kb_mcp.streamable_http_app()                          # 把 MCP 变成 ASGI 子应用
 _ws_app = ws_mcp.streamable_http_app()
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    configure_logging()                                  # 初始化结构化日志（3.3）
+    configure_logging()                                  # 初始化结构化日志
     logger = get_logger(__name__)
     logger.info("app.starting | env=%s port=%s", settings.app_env, settings.app_port)
 
-    # ① DB Schema 自动迁移（幂等，每次启动执行）—— 第 3 章的建表/迁移
+    # ① DB Schema 自动迁移（幂等，每次启动执行）
     try:
         from backend.db.migrations import run_migrations
         await run_migrations()
@@ -46,9 +46,9 @@ async def lifespan(app: FastAPI):
     # ② 并行预热三个本地模型（首次加载慢，提前热好，避免首个请求卡顿）
     import asyncio
     try:
-        from backend.core.reranker import BGEReranker            # 重排序模型（5.8）
-        from backend.core.query_classifier import QueryClassifier # 意图分类器（5.9）
-        from backend.core.knowledge_base import BGEMEmbedder      # BGE-M3 嵌入（5.4）
+        from backend.core.reranker import BGEReranker            # 重排序模型
+        from backend.core.query_classifier import QueryClassifier # 意图分类器
+        from backend.core.knowledge_base import BGEMEmbedder      # BGE-M3 嵌入
 
         loop = asyncio.get_running_loop()
         await asyncio.gather(                                    # 三个模型并行加载（各跑在线程池里）
@@ -68,7 +68,7 @@ async def lifespan(app: FastAPI):
 
             # ── 关闭时执行 ──
             logger.info("app.shutting_down")
-            from backend.core.llm_factory import LLMFactory      # LLM 工厂（3.4）
+            from backend.core.llm_factory import LLMFactory      # LLM 工厂
             LLMFactory.clear_cache()                            # 清缓存
             logger.info("app.shutdown_complete")
 
@@ -93,10 +93,10 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.include_router(api_router, prefix="/api/v1")        # 挂总路由（8.6.1），所有业务接口在 /api/v1 下
+app.include_router(api_router, prefix="/api/v1")        # 挂总路由，所有业务接口在 /api/v1 下
 
-app.mount("/mcp/kb",         _kb_app)                   # 挂知识库 MCP 子应用（5.11）
-app.mount("/mcp/web-search", _ws_app)                   # 挂联网搜索 MCP 子应用（5.11）
+app.mount("/mcp/kb",         _kb_app)                   # 挂知识库 MCP 子应用
+app.mount("/mcp/web-search", _ws_app)                   # 挂联网搜索 MCP 子应用
 
 
 @app.get("/health", tags=["系统"])                       # 健康检查（运维探活用）

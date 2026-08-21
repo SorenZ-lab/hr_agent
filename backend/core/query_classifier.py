@@ -30,7 +30,7 @@ class QueryClassifier:
 
     推理阶段：
         qc = QueryClassifier("models/classifier")
-        label, conf = qc.classify("什么是 Spring IOC？")
+        label, conf = qc.classify("公司岗位的任职要求是什么")
     """
 
     _instance: Optional["QueryClassifier"] = None

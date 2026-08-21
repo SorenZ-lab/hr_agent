@@ -18,10 +18,10 @@ from pydantic import BaseModel, Field
 from sse_starlette.sse import EventSourceResponse
 from langchain_core.messages import HumanMessage
 
-from backend.core.orchestrator import AgentType, ExecutionMode   # 8.2 定义的枚举
-from backend.core.memory import build_thread_id                  # 5.10 的 thread_id 工具
-from backend.core.llm_factory import get_llm                     # 3.4 的 LLM 工厂
-from backend.dependencies import get_current_user                # 3.6 的认证依赖
+from backend.core.orchestrator import AgentType, ExecutionMode   # 枚举
+from backend.core.memory import build_thread_id                  # thread_id 工具
+from backend.core.llm_factory import get_llm                     # LLM 工厂
+from backend.dependencies import get_current_user                # 认证依赖
 from backend.core.logger import get_logger
 
 router = APIRouter()
@@ -215,7 +215,7 @@ async def _llm_route(message: str) -> _RouteResult:
     返回：_RouteResult（label + agent_type + execution_mode + confidence + reason）
     """
     try:
-        llm = get_llm("intent", temperature=0)       # 取"intent"专用模型（3.4 配置），温度0求稳定
+        llm = get_llm("intent", temperature=0)       # 取"intent"专用模型，温度0求稳定
         resp = await llm.ainvoke([                    # 调 LLM
             HumanMessage(content=_ROUTE_PROMPT.format(message=message))
         ])
@@ -255,7 +255,7 @@ def _sse(data: dict) -> dict:
 @router.post("/stream")
 async def unified_chat_stream(
     req: UnifiedChatRequest,                          # 请求体：session_id + message
-    current_user: dict = Depends(get_current_user),   # 认证依赖（3.6）
+    current_user: dict = Depends(get_current_user),   # 认证依赖
 ):
     """
     统一 AI 助手流式接口（SSE）。

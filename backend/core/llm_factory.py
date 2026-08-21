@@ -74,7 +74,7 @@ class LLMFactory:
             "temperature": 0,                      # 默认 0：评分/批改要稳定输出
             "api_key": settings.deepseek_api_key,  # 来自 .env.local
             "base_url": settings.deepseek_base_url,# DeepSeek 接口地址
-            "max_retries": 0,                      # 模型层不重试；重试统一由 retry.py（3.5）管
+            "max_retries": 0,                      # 模型层不重试；重试统一由 retry.py 统一管理
             "http_async_client": _HTTP_ASYNC_CLIENT,  # 用上面绕过代理的异步客户端
             "http_client": _HTTP_SYNC_CLIENT,         # 同步客户端
         }

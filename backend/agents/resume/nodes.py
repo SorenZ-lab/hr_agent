@@ -432,7 +432,7 @@ async def save_results_node(state: ResumeState) -> dict:
     return {"fallback_used": False, "structured_output": structured_output}
 
 
-# ── 模块自测：实测 PDF 文本提取（离线；其余节点测试见各节）──
+# ── 模块自测：实测 PDF 文本提取（离线）──
 if __name__ == "__main__":
     import json
     async def main():

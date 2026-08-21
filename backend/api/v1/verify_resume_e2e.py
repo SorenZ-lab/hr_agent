@@ -9,7 +9,7 @@ import time
 import httpx
 
 # ============ 在这里直接配置所有参数 ============
-FILE_PATH = "/Users/ligang/Desktop/LiveHRAgent/samples/resume_sample.pdf"          # 改成你的 PDF 绝对路径或相对路径
+FILE_PATH = "samples/resume_sample.pdf"          # 改成你的 PDF 绝对路径或相对路径
 BASE_URL = "http://localhost:8000"        # 后端地址
 USERNAME = "candidate01"                  # 登录用户名
 PASSWORD = "Candidate@123456"             # 登录密码
