@@ -39,7 +39,6 @@ HRAgent 将这两类业务分别封装为独立的 AI Agent，每个 Agent 融�
 | 主力大模型 | DeepSeek（OpenAI 兼容接口） |
 | 向量数据库 | Milvus |
 | 关系数据库 | PostgreSQL + SQLAlchemy（全异步） |
-| 缓存 | Redis |
 | 对象存储 | MinIO |
 | 嵌入模型 | BGE-M3（进程内，dense + sparse 双输出） |
 | 精排模型 | BGE-Reranker-large（进程内） |
@@ -77,7 +76,7 @@ HRAgent 将这两类业务分别封装为独立的 AI Agent，每个 Agent 融�
        └── MCP Server（知识库检索 + Web 搜索）
                      │
 ┌────────────────────▼────────────────────────────┐
-│   数据层   PostgreSQL · Redis · Milvus · MinIO   │
+│   数据层   PostgreSQL · Milvus · MinIO           │
 └─────────────────────────────────────────────────┘
 ```
 
